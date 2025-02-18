@@ -16,11 +16,11 @@ const Contactos = db.sequelize.define('Contactos', {
         allowNull: false,
     },
     fijo:{
-        type:DataTypes.TEXT,
-        allowNull: false,
+        type: DataTypes.BIGINT,
+        allowNull: true,
     },
     celular:{
-        type: DataTypes.TEXT,
+        type: DataTypes.BIGINT,
         allowNull: false,
     },
     correo:{
@@ -31,41 +31,13 @@ const Contactos = db.sequelize.define('Contactos', {
         type: DataTypes.TEXT,
         allowNull: false,
     },
-    opcion:{
-        type: DataTypes.TEXT,
-        allowNull: false,
-    },
-    curso:{
-        type: DataTypes.TEXT,
-        allowNull: true,
-    },
-    numPersonas:{
-        type: DataTypes.INTEGER,
-        allowNull: true,
-    },
-    infoComplementaria:{
-        type: DataTypes.TEXT('long'), //file B
-        allowNull: true,
-    },
     estadoOUT:{
         type: DataTypes.TEXT,
         allowNull: true,
     },
-    requerimientos:{
-        type: DataTypes.TEXT('long'), //file A
-        allowNull: true,
-    },
-    fecha:{
-        type: DataTypes.DATE,
-        allowNull: true,
-    },
     duda:{
         type: DataTypes.TEXT('long'),
-        allowNull: true,
-    },
-    filename:{
-        type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
     },
     area:{
         type: DataTypes.TEXT,

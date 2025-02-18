@@ -12,6 +12,7 @@ const Imagenes_Sucursales = require("../models/general/imagenes_sucursales")
 const Sucursales = require("../models/general/sucursales")
 const Imagenes_Subseccion = require("../models/general/imagenes_subseccion")
 const Archivos_Subseccion = require("../models/general/archivos_subseccion")
+const Contactos = require("../models/general/contactos")
 
 async function obtenerArchivo(req, res) {
     const { origen } = req.params
@@ -53,6 +54,39 @@ async function crearSolicitud(req, res) {
             filename: file.originalname,
             file: file.buffer.toString('base64'),
             division: division
+        }).then((solicitud) => {
+            res.status(200).send(solicitud)
+        }).catch((err) => {
+            res.status(500).json({ message: err })
+        })
+    } catch (err) {
+        res.status(500).json({ message: "error" })
+    }
+}
+
+async function crearContacto(req, res) {
+    const { nombre, empresa, fijo, celular, correo, estadoIN, estadoOUT, area, duda } = req.body
+    const file = req.files[0]
+    console.log(nombre)
+    console.log(empresa)
+    console.log(fijo)
+    console.log(celular)
+    console.log(correo)
+    console.log(estadoIN)
+    console.log(estadoOUT)
+    console.log(area)
+    console.log(duda)
+    try {
+        await Contactos.create({
+            nombre: nombre,
+            empresa: empresa,
+            fijo: fijo,
+            celular: celular,
+            correo: correo,
+            estadoIN: estadoIN,
+            estadoOUT: estadoOUT,
+            area: area, 
+            duda: duda
         }).then((solicitud) => {
             res.status(200).send(solicitud)
         }).catch((err) => {
@@ -416,6 +450,7 @@ module.exports = {
     obtenerArchivo,
     obtenerComunicados,
     crearSolicitud,
+    crearContacto,
     navbar,
     obtenerCarrusel,
     obtenerAnuncio,
