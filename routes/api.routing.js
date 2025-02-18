@@ -23,6 +23,8 @@ router.get('/obtenerSucursales/:division', api.obtenerSucursales)
 
 //FORMULARIO DE UNIRSE AL TEAM
 router.post('/crearSolicitud',upload.any(),api.crearSolicitud)
+//FORMULARIO DE CONTACTANOS
+router.post('/crearContacto',upload.any(),api.crearContacto)
 
 router.use(express.json())
 //CATEGORIAS
