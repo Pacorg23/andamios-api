@@ -32,6 +32,7 @@ router.post('/obtenerSecciones',api.obtenerSecciones)
 //SECCIONES
 router.get('/obtenerSeccion/:url',api.getSeccion)
 router.get('/obtenerSubseccion/:url',api.getSubseccion)
+router.get('/obtenerSubseccion/seccion/:seccion',api.getSubseccionPorPadre)
 
 
 module.exports = router;
