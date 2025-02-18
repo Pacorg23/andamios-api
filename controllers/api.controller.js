@@ -342,7 +342,6 @@ async function getSeccion(req, res) {
         }
         // Obtener imágenes asociadas
         const imgs = await Imagenes_Seccion.findAll({ where: { id_seccion: row.id } });
-        console.log(imgs);
         const processedImgs = imgs.map(img => ({
             ...img.toJSON(),
             img: img.file.toString("base64")
@@ -366,7 +365,6 @@ async function getSeccion(req, res) {
         // Enviar respuesta
         res.status(200).send(result);
     } catch (error) {
-        console.log(error);
         res.status(500).send('error: ' + error)
     }
 }
@@ -412,6 +410,33 @@ async function getSubseccion(req, res) {
     }
 }
 
+async function getSubseccionPorPadre(req, res) {
+    try {
+
+        const { seccion } = req.params;
+
+        const findSeccionPadre = await Secciones.findOne({ where: { url: seccion } });
+        console.log("Padre: ", findSeccionPadre.id);
+
+        const foundSubsecciones = await Subsecciones.findAll({ where: { seccion: findSeccionPadre.id } });
+
+        //agregar imagen inicio a cada subseccion
+
+        for (const subseccion of foundSubsecciones) {
+            console.log("Subseccion: ", subseccion.id);
+            const imagen = await Imagenes_Subseccion.findOne({ where: { id_subseccion: subseccion.id } });
+            subseccion.imagen_inicio = imagen.file;
+        }
+
+        console.log(foundSubsecciones);
+
+        res.status(200).send(foundSubsecciones);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('error: ' + error)
+    }
+}
+
 module.exports = {
     obtenerArchivo,
     obtenerComunicados,
@@ -425,5 +450,6 @@ module.exports = {
     obtenerImagenSucursal,
     obtenerSucursales,
     getSeccion,
-    getSubseccion
+    getSubseccion,
+    getSubseccionPorPadre
 }
