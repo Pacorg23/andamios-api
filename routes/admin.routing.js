@@ -16,5 +16,12 @@ router.post('/verificarPassword',jwt.tokenMiddleware, admin.verificarPassword)
 router.delete('/eliminarUsuario/:id',jwt.tokenMiddleware, admin.eliminarUsuario)
 router.put('/modificarUsuario',jwt.tokenMiddleware, admin.modificarUsuario)
 
+//USER ACTIVITY
+router.get('/session', jwt.tokenMiddleware, (req, res) => {
+    res.status(200).json({ message: "Session is active" })
+})
+router.post('/startSession', admin.startSession);
+router.post('/cerrarSesion/:userId',jwt.tokenMiddleware, admin.endSession);
+
 
 module.exports = router;

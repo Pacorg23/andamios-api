@@ -198,8 +198,7 @@ async function obtenerSeccion(req, res) { //obtiene seccion por id
 
         let data;
         let pdf;
-        let imagenes = null
-        console.log(id)
+        let imagenes = null;
 
         const seccion = await Secciones.findOne(
             { where: { id: id } }
@@ -253,7 +252,6 @@ async function modificarSeccion(req, res) {
         const file = req.files[0]
 
         if (file) {
-            console.log("nueva imagen")
             await Secciones.update({
                 nombre: nombre,
                 url: url, descripcion: descripcion,
@@ -268,7 +266,6 @@ async function modificarSeccion(req, res) {
                 res.status(500).json({ message: "Error al modificar seccion: " + error })
             })
         } else {
-            console.log("no modifica la imagen")
             await Secciones.update({
                 nombre: nombre,
                 url: url, descripcion: descripcion,
@@ -628,8 +625,6 @@ async function agregarArchivoASubseccion(req, res) { //requiere el id de la subs
         const { id_subseccion } = req.body
         const file = req.files[0]
 
-        console.log(file)
-
         if (ImageValidator.verificarArchivo(file)) {
             await Archivos_Subseccion.create({ nombre: file.fieldname, file: file.buffer.toString('base64'), id_elemento: id_subseccion }).then(() => {
                 res.status(200).json({ message: "Archivo agregado" })
@@ -763,7 +758,6 @@ async function obtenerSeccionesYSubsecciones(idCategoria) {
 async function obtenerSolicitudesContacto(req, res) {
     try {
         const { area } = req.params
-        console.log(area)
         await Contactos.findAll({ where: { area: area } }).then((rows) => {
             const solicitudes = rows.map(soli => ({
                 id: soli.id,
@@ -807,13 +801,13 @@ async function eliminarSolicitudContacto(req, res) {
 }
 
 //SOLICITUDES
+//TODO buscar por division
 async function obtenerSolicitudes(req, res) { //obtener solicitudes de trabajo
     try {
 
         const { division } = req.params
 
         await Solicitudes.findAll().then(result => {
-            console.log(result)
             res.status(200).send(result)
 
         }).catch((error) => {
@@ -1008,12 +1002,10 @@ async function subirArchivo(req, res) {
     try {
         const exist = await Archivos.findOne({ where: { origen: origen } })
         if (exist) {
-            console.log("modificar")
             await Archivos.update({ nombre: file.originalname, file: file.buffer.toString('base64') }, { where: { origen: origen } }).then(() => {
                 res.status(200).json({ message: "ok" })
             })
         } else {
-            console.log("crear")
             await Archivos.create({ nombre: file.originalname, file: file.buffer.toString('base64'), origen: origen }).then(() => {
                 res.status(200).json({ message: "ok" })
             })
