@@ -1,13 +1,15 @@
 const jwt = require("jsonwebtoken")
 require('dotenv').config()
+const adminController = require("../controllers/admin.controller")
 
-function createJWT(id, user, email) {
+function createJWT(id, user, email, role) {
     return new Promise((resolve, reject) => {
         // Declaramos en un objeto los claims o info del token
         const claims = {
             id: id,
             user: user,
-            email: email
+            email: email,
+            role: role
         };
 
         // Se firma el token y lo resolvemos o rechazamos la promesa
@@ -27,7 +29,7 @@ function decodeJWT(token) { //decodifica token
 }
 
 //Recibe el token JWT por header, revisa que este bien y lo regresa en el req
-function tokenMiddleware(req, res, next) { 
+function tokenMiddleware(req, res, next) {
     //obtiene el token por header
     const bearerHeader = req.headers['authorization']
     //mientras no este vacio
@@ -39,8 +41,18 @@ function tokenMiddleware(req, res, next) {
             if (error) {
                 res.status(403).json({ message: error.message })
             } else {
-                req.token = bearerToken
-                next()
+                const tokenInfo = jwt.decode(bearerToken)
+                adminController.checkSession(tokenInfo.claims.id).then((isLogged) => {
+                    if(isLogged){
+                        req.token = bearerToken
+                        next()
+                    } else {
+                        res.status(403).json({
+                            message: "El token expiro o tienes session en otro dispositivo",
+                            type: "session"
+                        })
+                    }
+                });
             }
         })
     } else {

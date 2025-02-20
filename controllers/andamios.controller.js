@@ -12,7 +12,6 @@ async function agregarCarrusel(req, res) {
         }).then(() => {
             res.status(200).json({ message: "ok" })
         }).catch((error) => {
-            console.log(error)
             res.status(500).send('error: ' + error)
         })
     } catch (error) {

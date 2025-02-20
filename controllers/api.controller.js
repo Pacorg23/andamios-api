@@ -66,16 +66,6 @@ async function crearSolicitud(req, res) {
 
 async function crearContacto(req, res) {
     const { nombre, empresa, fijo, celular, correo, estadoIN, estadoOUT, area, duda } = req.body
-    const file = req.files[0]
-    console.log(nombre)
-    console.log(empresa)
-    console.log(fijo)
-    console.log(celular)
-    console.log(correo)
-    console.log(estadoIN)
-    console.log(estadoOUT)
-    console.log(area)
-    console.log(duda)
     try {
         await Contactos.create({
             nombre: nombre,
@@ -85,7 +75,7 @@ async function crearContacto(req, res) {
             correo: correo,
             estadoIN: estadoIN,
             estadoOUT: estadoOUT,
-            area: area, 
+            area: area,
             duda: duda
         }).then((solicitud) => {
             res.status(200).send(solicitud)
@@ -265,7 +255,6 @@ async function obtenerSecciones(req, res) {
                 break;
             case 'C':
 
-                console.log('entro a C');
                 const seccionesC = await Secciones.findAll({ where: { categoria: id } });
 
                 const elementosConImagenes = [];
@@ -439,7 +428,6 @@ async function getSubseccion(req, res) {
         // Enviar respuesta
         res.status(200).send(result);
     } catch (error) {
-        console.log(error);
         res.status(500).send('error: ' + error)
     }
 }
@@ -450,23 +438,24 @@ async function getSubseccionPorPadre(req, res) {
         const { seccion } = req.params;
 
         const findSeccionPadre = await Secciones.findOne({ where: { url: seccion } });
-        console.log("Padre: ", findSeccionPadre.id);
 
         const foundSubsecciones = await Subsecciones.findAll({ where: { seccion: findSeccionPadre.id } });
 
         //agregar imagen inicio a cada subseccion
-
+        const seccionesModificadas = [];
         for (const subseccion of foundSubsecciones) {
-            console.log("Subseccion: ", subseccion.id);
+            const seccion = {
+                id: subseccion.id,
+                nombre: subseccion.nombre,
+                url: subseccion.url
+            }
             const imagen = await Imagenes_Subseccion.findOne({ where: { id_subseccion: subseccion.id } });
-            subseccion.imagen_inicio = imagen.file;
+            seccion.imagen_inicio = imagen.file.toString("base64");
+            seccionesModificadas.push(seccion);
         }
 
-        console.log(foundSubsecciones);
-
-        res.status(200).send(foundSubsecciones);
+        res.status(200).send(seccionesModificadas);
     } catch (error) {
-        console.log(error);
         res.status(500).send('error: ' + error)
     }
 }
