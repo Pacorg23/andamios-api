@@ -5,6 +5,8 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage })
 const api = require('../controllers/api.controller')
 
+//** ANDAMIOS **//
+
 router.get('/obtenerArchivo/:origen',api.obtenerArchivo)
 
 router.get('/navbar/:area',api.navbar)
@@ -33,6 +35,8 @@ router.post('/obtenerSecciones',api.obtenerSecciones)
 router.get('/obtenerSeccion/:url',api.getSeccion)
 router.get('/obtenerSubseccion/:url',api.getSubseccion)
 router.get('/obtenerSubseccion/seccion/:seccion',api.getSubseccionPorPadre)
+
+//** CONTEN **//
 
 
 module.exports = router;
