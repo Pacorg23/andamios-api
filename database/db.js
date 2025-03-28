@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config()
 
-const sequelize = new Sequelize(process.env.DB, process.env.USER, '', {
+const sequelize = new Sequelize(process.env.DB, process.env.USER, process.env.PASSWORD, {
     host: process.env.HOST,
     dialect: process.env.DIALECT, /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */
     timezone: process.env.TIMEZONE /* 'America/Mexico_City' */
