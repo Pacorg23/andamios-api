@@ -13,6 +13,11 @@ const Sucursales = require("../models/general/sucursales")
 const Imagenes_Subseccion = require("../models/general/imagenes_subseccion")
 const Archivos_Subseccion = require("../models/general/archivos_subseccion")
 const Contactos = require("../models/general/contactos")
+const ArchivosConten = require("../models/general/archivos_conten")
+const ImagenesConten = require("../models/general/imagenes_conten")
+const CategoriasConten = require("../models/general/categorias_conten")
+const SeccionesConten = require("../models/general/secciones_conten")
+const SubseccionesConten = require("../models/general/subsecciones_conten")
 
 async function obtenerArchivo(req, res) {
     const { origen } = req.params
@@ -459,6 +464,89 @@ async function getSubseccionPorPadre(req, res) {
         res.status(500).send('error: ' + error)
     }
 }
+async function getCategoriaContenPorId(req, res) {
+    try {
+        const { id } = req.params;
+        console.log(req.paras)
+        const categoria = await CategoriasConten.findOne({ where: { id } });
+
+        if (!categoria) {
+            return res.status(404).json({ message: "Categoría no encontrada" });
+        }
+
+        const secciones = await SeccionesConten.findAll({ where: { Categorias_Id: id } });
+        const seccionesId = secciones.map(seccion => seccion.id);
+        const subsecciones = await SubseccionesConten.findAll({ where: { Secciones_Conten_Id: seccionesId } });
+
+        const response = {
+            id: categoria.id,
+            title: categoria.title,
+            tipo: categoria.tipo,
+            is_active: categoria.is_active,
+            has_sections: categoria.has_sections,
+            url: categoria.url,
+            is_default: categoria.is_default,
+            description: categoria.description,
+            img: categoria.img,
+            pdf: categoria.pdf,
+            secciones: secciones.map(seccion => ({
+                id: seccion.id,
+                title: seccion.title,
+                url: seccion.url,
+                subsecciones: subsecciones
+                    .filter(subseccion => subseccion.Secciones_Conten_Id === seccion.id)
+                    .map(subseccion => ({
+                        id: subseccion.id,
+                        title: subseccion.title,
+                        descripcion: subseccion.descripcion,
+                    })),
+            })),
+        };
+
+        res.status(200).json(response);
+    } catch (error) {
+        console.error("Error en obtenerCategoriaConten: ", error);
+        res.status(500).json({ message: "Error al obtener categoría", error });
+    }
+}
+async function obtenerNavBarConten(req, res) {
+    try {
+        // Obtener categorías
+        const categorias = await CategoriasConten.findAll();
+        if (!categorias || categorias.length === 0) {
+            return res.status(404).json({ message: "Categoría no encontrada" });
+        }
+
+        // Extraer IDs de categorías
+        const categoriasIds = categorias.map(categoria => categoria.id);
+
+        // Obtener secciones relacionadas
+        const secciones = await SeccionesConten.findAll({ where: { Categorias_Id: categoriasIds } });
+
+        // Construir respuesta
+        const response = categorias.map(categoria => ({
+            id: categoria.id,
+            title: categoria.title,
+            tipo: categoria.tipo,
+            is_active: categoria.is_active,
+            has_sections: categoria.has_sections,
+            url: categoria.url,
+            secciones: secciones
+                .filter(seccion => seccion.Categorias_Id === categoria.id)
+                .map(seccion => ({
+                    id: seccion.id,
+                    title: seccion.title,
+                    descripcion: seccion.descripcion
+                }))
+        }));
+
+        // Responder con éxito
+        return res.status(200).json(response);
+    } catch (error) {
+        console.error("Error en obtenerNavBarConten: ", error);
+        return res.status(500).json({ message: "Error al obtener categoría", error });
+    }
+}
 
 module.exports = {
     obtenerArchivo,
@@ -475,5 +563,7 @@ module.exports = {
     obtenerSucursales,
     getSeccion,
     getSubseccion,
-    getSubseccionPorPadre
+    getSubseccionPorPadre,
+    obtenerNavBarConten,
+    getCategoriaContenPorId
 }
