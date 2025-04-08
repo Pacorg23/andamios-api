@@ -1,5 +1,65 @@
 const Users = require('../models/admin/usuarios');
+const Categories = require('../models/general/categorias_conten');
 const bcrypt = require('bcrypt');
+
+const initialCategories = [
+    {
+        title: 'NOSOTROS',
+        tipo: 'INITAL',
+        is_active: true,
+        has_sections: false,
+        url: '/conten',
+        is_default: true,
+        is_active: true,
+        description: '',
+        img: null,
+        pdf: null
+    },
+    {
+        title: 'MANUFACTURA',
+        tipo: 'B',
+        is_active: true,
+        has_sections: true,
+        url: 'manufactura',
+        is_default: false,
+        description: 'Descripción de la categoría B',
+        img: null,
+        pdf: null
+    },
+    {
+        title: 'DISEÑO E INGENIERÍA',
+        tipo: 'A',
+        is_active: true,
+        has_sections: false,
+        url: 'ingenieria',
+        is_default: false,
+        description: 'Descripción de la categoría C',
+        img: null,
+        pdf: null
+    },
+    {
+        title: 'PRODUCTOS',
+        tipo: 'C',
+        is_active: true,
+        has_sections: false,
+        url: 'productos',
+        is_default: false,
+        description: 'Descripción de la categoría D',
+        img: null,
+        pdf: null
+    },
+    {
+        title: 'NUESTRAS CERTIFICACIONES',
+        tipo: 'D',
+        is_active: true,
+        has_sections: false,
+        url: 'certificaciones',
+        is_default: false,
+        description: 'Descripción de la categoría E',
+        img: null,
+        pdf: null
+    }
+];
 
 /**
  * @description Crea un usuario admin si no existe
@@ -27,6 +87,27 @@ async function seedAdminUser() {
     }
 }
 
+/**
+ * @description Crea categorías por defecto si no existen
+ */
+async function seedDefaultCategories() {
+    for (const cat of initialCategories) {
+        try {
+            const exists = await Categories.findOne({ where: { url: cat.url } });
+
+            if (!exists) {
+                await Categories.create(cat);
+                console.log(`✅ Categoría "${cat.title}" creada.`);
+            } else {
+                console.log(`ℹ️ Categoría "${cat.title}" ya existe.`);
+            }
+        } catch (error) {
+            console.error(`❌ Error al crear categoría "${cat.title}":`, error.message);
+        }
+    }
+}
+
 module.exports = {
-    seedAdminUser
+    seedAdminUser,
+    seedDefaultCategories
 }

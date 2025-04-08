@@ -39,7 +39,7 @@ const ArchivosConten = db.sequelize.define('Archivos_Conten', {
 })
 
 
-ArchivosConten.belongsTo( SeccionesConten, {
+/*ArchivosConten.belongsTo( SeccionesConten, {
     foreignKey: 'Secciones_Conten_Id',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
@@ -68,5 +68,5 @@ CategoriasConten.hasMany(ArchivosConten, {
     foreignKey: 'Categorias_Conten_Id',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
-});
+});*/
 module.exports = ArchivosConten

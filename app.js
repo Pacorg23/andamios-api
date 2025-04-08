@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors')
 const db = require("./database/db")
 const seed = require("./database/seed")
+const conten = require('./routes/conten.routing');
 require('dotenv').config()
 
 //rutas
@@ -18,12 +19,13 @@ db.checkDatabaseConnection().then(() => {
     }))
 
     seed.seedAdminUser();
+    seed.seedDefaultCategories();
 
     app.use('/general', general);
     app.use('/andamios', andamios);
     app.use('/admin', admin);
     app.use('/api', api); // -> CLIENT
-    //app.use('/conten', conten); -> ADMIN
+    app.use('/conten', conten); //-> ADMIN
 
 
     /* INICIA EL SERVIDOR CON HTTP POR EL SOCKET*/
