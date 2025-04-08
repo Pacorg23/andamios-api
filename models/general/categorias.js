@@ -30,7 +30,7 @@ const Categorias = db.sequelize.define('Categorias', {
     banner:{
         type: DataTypes.TEXT('long'),
         allowNull: true,
-    },
+    }
 },{
     timestamps:false
 })

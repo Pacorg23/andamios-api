@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require("../../database/db")
-const Cateogrias = require('./categorias_conten');
+const CategoriasConten = require('./categorias_conten');
 
 const SeccionesConten = db.sequelize.define('Secciones_Conten', {
     id: {
@@ -20,7 +20,7 @@ const SeccionesConten = db.sequelize.define('Secciones_Conten', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: Cateogrias,
+            model: CategoriasConten,
             key: 'id'
         }
     },
@@ -28,12 +28,12 @@ const SeccionesConten = db.sequelize.define('Secciones_Conten', {
     timestamps:false
 })
 
-SeccionesConten.belongsTo( Cateogrias, {
+SeccionesConten.belongsTo( CategoriasConten, {
     foreignKey: 'Categorias_Id',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
 });
-Cateogrias.hasMany(SeccionesConten, {
+CategoriasConten.hasMany(SeccionesConten, {
     foreignKey: 'Categorias_Id',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'

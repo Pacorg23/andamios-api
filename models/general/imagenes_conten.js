@@ -38,7 +38,7 @@ const ImagenesConten = db.sequelize.define('Imagenes_Conten', {
 })
 
 
-ImagenesConten.belongsTo( SeccionesConten, {
+/*ImagenesConten.belongsTo( SeccionesConten, {
     foreignKey: 'Secciones_Conten_Id',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
@@ -67,5 +67,5 @@ CategoriasConten.hasMany(ImagenesConten, {
     foreignKey: 'Categorias_Conten_Id',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
-});
+});*/
 module.exports = ImagenesConten

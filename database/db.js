@@ -26,6 +26,7 @@ async function checkDatabaseConnection() {
 
         console.log('Sincronización de la base de datos realizada correctamente.');
     } catch (error) {
+        console.log(error)
         console.error('Error al sincronizar la base de datos:', error.parent.sqlMessage);
         process.exit(1);
     }
