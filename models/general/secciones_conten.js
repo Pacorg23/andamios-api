@@ -8,15 +8,19 @@ const SeccionesConten = db.sequelize.define('Secciones_Conten', {
         primaryKey: true,
         autoIncrement: true,
     },
-    title:{
+    title: {
         type: DataTypes.TEXT,
         allowNull: false,
     },
-    url:{ 
+    url: {
         type: DataTypes.TEXT,
         allowNull: true,
     },
-    Categorias_Id:{ 
+    description: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    Categorias_Id: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
@@ -24,11 +28,19 @@ const SeccionesConten = db.sequelize.define('Secciones_Conten', {
             key: 'id'
         }
     },
-},{
-    timestamps:false
+    img: {
+        type: DataTypes.TEXT('long'),
+        allowNull: true,
+    },
+    file: {
+        type: DataTypes.TEXT('long'),
+        allowNull: true,
+    },
+}, {
+    timestamps: false
 })
 
-SeccionesConten.belongsTo( CategoriasConten, {
+SeccionesConten.belongsTo(CategoriasConten, {
     foreignKey: 'Categorias_Id',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'

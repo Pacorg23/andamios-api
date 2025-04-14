@@ -8,40 +8,42 @@ const contenController = require('../controllers/conten.controller')
 
 //zona FORMDATA /////////////////////////////////////////////////////////////////////////////////////////////////
 //Archivos
-router.post('conten/agregarArchivos',upload.any(), jwt.tokenMiddleware,contenController.agregarArchivos)
-router.delete('conten/eliminarArchivos', jwt.tokenMiddleware,contenController.eliminarArchivos)
-router.post('conten/modificarArchivos',upload.any(), jwt.tokenMiddleware,contenController.modificarArchivos)
-router.get('conten/obtenerArchivosCategoria', jwt.tokenMiddleware,contenController.obtenerArchivosCategoria)
-router.get('conten/obtenerArchivosSeccion', jwt.tokenMiddleware,contenController.obtenerArchivosSeccion)
-router.get('conten/obtenerArchivosSubsecciones', jwt.tokenMiddleware,contenController.obtenerArchivosSubsecciones)
+router.post('/initFile', upload.any(), jwt.tokenMiddleware, contenController.initFile)
+router.delete('/deleteFile', jwt.tokenMiddleware, contenController.deleteFile)
+router.post('conten/modificarArchivos', upload.any(), jwt.tokenMiddleware, contenController.modificarArchivos)
+router.get('conten/obtenerArchivosCategoria', jwt.tokenMiddleware, contenController.obtenerArchivosCategoria)
+router.get('conten/obtenerArchivosSeccion', jwt.tokenMiddleware, contenController.obtenerArchivosSeccion)
+router.get('conten/obtenerArchivosSubsecciones', jwt.tokenMiddleware, contenController.obtenerArchivosSubsecciones)
 
 //Categorias
-router.post('/initCategory',upload.any(),jwt.tokenMiddleware, contenController.initCategory)
-router.delete('/deleteCategories/:id', jwt.tokenMiddleware,contenController.deleteCategories)
-router.put('/setCategory',upload.any(), jwt.tokenMiddleware,contenController.setCategory)
-router.get('/getCategories', jwt.tokenMiddleware,contenController.getCategories)
-router.get('/getCategoriesById/:id', jwt.tokenMiddleware,contenController.getCategoriesById)
+router.post('/initCategory', upload.any(), jwt.tokenMiddleware, contenController.initCategory)
+router.delete('/deleteCategories/:id', jwt.tokenMiddleware, contenController.deleteCategories)
+router.put('/setCategory', upload.any(), jwt.tokenMiddleware, contenController.setCategory)
+router.get('/getCategories', jwt.tokenMiddleware, contenController.getCategories)
+router.get('/getCategoriesById/:id', jwt.tokenMiddleware, contenController.getCategoriesById)
 
 //Imagenes
-router.post('conten/agregarImagenes',upload.any(), jwt.tokenMiddleware,contenController.agregarImagenes)
-router.delete('conten/eliminarImagenes', jwt.tokenMiddleware,contenController.eliminarImagenes)
-router.post('conten/modificarImagenes',upload.any(), jwt.tokenMiddleware,contenController.modificarImagenes)
-router.get('conten/obtenerImagenesCategoria', jwt.tokenMiddleware,contenController.obtenerImagenesCategoria)
-router.get('conten/obtenerImagenesSeccion', jwt.tokenMiddleware,contenController.obtenerImagenesSeccion)
-router.get('conten/obtenerImagenesSubsecciones', jwt.tokenMiddleware,contenController.obtenerImagenesSubsecciones)
+router.post('/initImage', upload.any(), jwt.tokenMiddleware, contenController.initImage)
+router.delete('/deleteImage/:id', jwt.tokenMiddleware, contenController.deleteImage)
+router.post('conten/modificarImagenes', upload.any(), jwt.tokenMiddleware, contenController.modificarImagenes)
+router.get('conten/obtenerImagenesCategoria', jwt.tokenMiddleware, contenController.obtenerImagenesCategoria)
+router.get('conten/obtenerImagenesSeccion', jwt.tokenMiddleware, contenController.obtenerImagenesSeccion)
+router.get('conten/obtenerImagenesSubsecciones', jwt.tokenMiddleware, contenController.obtenerImagenesSubsecciones)
 
 //Secciones
-router.post('conten/agregarSecciones',upload.any(), jwt.tokenMiddleware,contenController.agregarSecciones)
-router.get('conten/obtenerSecciones', jwt.tokenMiddleware,contenController.obtenerSecciones)
-router.get('/getSectionsById/:id',contenController.getSectionsById)
-router.delete('conten/eliminarSecciones', jwt.tokenMiddleware,contenController.eliminarSecciones)
-router.post('conten/modificarSecciones',upload.any(), jwt.tokenMiddleware,contenController.modificarSecciones)
+router.post('/initSection', upload.any(), jwt.tokenMiddleware, contenController.initSection)
+router.get('/getSectionInfo/:id', jwt.tokenMiddleware, contenController.getSectionInfo)
+router.get('/getSectionById/:id', contenController.getSectionById)
+router.get('/getSectionsByFatherId/:id', contenController.getSectionsByFatherId)
+router.delete('/deleteSection/:id', jwt.tokenMiddleware, contenController.eliminarSecciones)
+router.put('/setSection', upload.any(), jwt.tokenMiddleware, contenController.setSection)
 
 //Subsecciones
-router.post('conten/agregarSubsecciones',upload.any(), jwt.tokenMiddleware,contenController.agregarSubsecciones)
-router.post('conten/modificarSubsecciones',upload.any(), jwt.tokenMiddleware,contenController.modificarSubsecciones)
-router.delete('conten/eliminarSubsecciones', jwt.tokenMiddleware,contenController.eliminarSubsecciones)
-router.get('conten/obtenerSubsecciones', jwt.tokenMiddleware,contenController.obtenerSubsecciones)
+router.post('/initSubsection', upload.any(), jwt.tokenMiddleware, contenController.initSubsection)
+router.get('/getSubsectionsById/:id', upload.any(), jwt.tokenMiddleware, contenController.getSubsectionsById)
+router.put('/setSubsection', upload.any(), jwt.tokenMiddleware, contenController.setSubsection)
+router.delete('/deleteSubsection/:id', jwt.tokenMiddleware, contenController.deleteSubsection)
+router.get('/getSubsectionsByFatherId/:id', jwt.tokenMiddleware, contenController.getSubsectionsByFatherId)
 
 //Teest
 // router.get('/conten/test', contenController.test)
