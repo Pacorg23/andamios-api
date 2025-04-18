@@ -103,8 +103,8 @@ async function initCategory(req, res) {
             img: img ? "data:image/*;base64," + img.toString('base64') : '',
             has_sections,
             is_active
-        }, {returning:true} ).then((result) => {
-            res.status(200).json(result )
+        }, { returning: true }).then((result) => {
+            res.status(200).json(result)
         }).catch((error) => {
             res.status(500).send('error: ' + error)
             console.log(error)
@@ -166,7 +166,11 @@ async function getCategories(req, res) {
     const { id } = req.params
 
     try {
-        await Categorias.findAll({ where: { is_active: 1 } }).then((result) => {
+        await Categorias.findAll({
+            where: { is_active: 1 },
+            attributes: ["id", "title", "url", "tipo", "is_active", "has_sections","is_default"],
+
+        }).then((result) => {
             res.status(200).json(result)
         }).catch(() => {
             res.status(500).json({ message: "No existe registro" })
@@ -182,6 +186,8 @@ async function initImage(req, res) {
     const { title, Secciones_Conten_Id, Subsecciones_Conten_Id, Categorias_Conten_Id } = req.body
 
     const data = req.files[0]?.buffer || ""
+    console.log("title, Secciones_Conten_Id, Subsecciones_Conten_Id, Categorias_Conten_Id")
+    console.log(title, Secciones_Conten_Id, Subsecciones_Conten_Id, Categorias_Conten_Id)
     try {
         await Imagenes.create({
             title,
@@ -416,8 +422,8 @@ async function initSubsection(req, res) {
             Secciones_Conten_Id,
             img: img ? "data:image/*;base64," + img.toString('base64') : '',
             file: file ? file.toString('base64') : '',
-        }).then(() => {
-            res.status(200).json({ message: "ok" })
+        }, { returning: true }).then((result) => {
+            res.status(200).json(result)
         }).catch((error) => {
             console.log(error)
             res.status(500).send('error: ' + error)
@@ -444,11 +450,17 @@ async function deleteSubsection(req, res) {
 }
 async function setSubsection(req, res) {
     const { id, title, descripcion } = req.body
+    const img = req.files[0]?.buffer || ""
+    const file = req.files[1]?.buffer || ""
 
     try {
         await Subsecciones.update({
             title,
-            descripcion
+            descripcion, 
+            file,
+            img: img ? "data:image/*;base64," + img.toString('base64') : '',
+            file: file ? file.toString('base64') : '',
+
         }, { where: { id: id } }).then(() => {
             res.status(200).json({ message: "ok" })
         })
