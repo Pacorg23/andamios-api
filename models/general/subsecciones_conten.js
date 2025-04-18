@@ -12,6 +12,10 @@ const SubseccionesConten = db.sequelize.define('Subsecciones_Conten', {
         type: DataTypes.TEXT,
         allowNull: false,
     },
+    url: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
     description: { //area de la categoria
         type: DataTypes.TEXT('long'),
         allowNull: false,
@@ -20,7 +24,15 @@ const SubseccionesConten = db.sequelize.define('Subsecciones_Conten', {
         type: DataTypes.INTEGER,
         allowNull: false,
         foreignKey: true
-    }
+    },
+    img: {
+        type: DataTypes.TEXT('long'),
+        allowNull: true,
+    },
+    file: {
+        type: DataTypes.TEXT('long'),
+        allowNull: true,
+    },
 }, {
     timestamps: false
 })

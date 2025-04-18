@@ -25,10 +25,10 @@ router.get('/getCategoriesById/:id', jwt.tokenMiddleware, contenController.getCa
 //Imagenes
 router.post('/initImage', upload.any(), jwt.tokenMiddleware, contenController.initImage)
 router.delete('/deleteImage/:id', jwt.tokenMiddleware, contenController.deleteImage)
-router.post('conten/modificarImagenes', upload.any(), jwt.tokenMiddleware, contenController.modificarImagenes)
-router.get('conten/obtenerImagenesCategoria', jwt.tokenMiddleware, contenController.obtenerImagenesCategoria)
-router.get('conten/obtenerImagenesSeccion', jwt.tokenMiddleware, contenController.obtenerImagenesSeccion)
-router.get('conten/obtenerImagenesSubsecciones', jwt.tokenMiddleware, contenController.obtenerImagenesSubsecciones)
+router.delete('/restartImagesCategory/:id', upload.any(), jwt.tokenMiddleware, contenController.restartImagesCategory)
+router.delete('/restartImagesSection/:id', upload.any(), jwt.tokenMiddleware, contenController.restartImagesSection)
+router.delete('/restartImagesSubsection/:id', upload.any(), jwt.tokenMiddleware, contenController.restartImagesSubsection)
+router.get('/getImagesByCategoryId/:id', jwt.tokenMiddleware, contenController.getImagesByCategoryId)
 
 //Secciones
 router.post('/initSection', upload.any(), jwt.tokenMiddleware, contenController.initSection)

@@ -3,6 +3,7 @@ const Categorias = require('../models/general/categorias_conten')
 const Imagenes = require('../models/general/imagenes_conten')
 const Secciones = require('../models/general/secciones_conten')
 const Subsecciones = require('../models/general/subsecciones_conten')
+const { options } = require('../routes/conten.routing')
 
 //Archivos
 async function initFile(req, res) {
@@ -91,6 +92,7 @@ async function obtenerArchivosSubsecciones(req, res) {
 //Categorias
 async function initCategory(req, res) {
     try {
+        console.log(req.body)
         const { title, tipo, url, description, has_sections, is_active } = req.body
         const img = req.files[0]?.buffer || ""
         await Categorias.create({
@@ -98,11 +100,11 @@ async function initCategory(req, res) {
             tipo,
             url,
             description,
-            img: img ? "data:image/*;base64," + img.toString('base64') : '', 
+            img: img ? "data:image/*;base64," + img.toString('base64') : '',
             has_sections,
             is_active
-        }).then(() => {
-            res.status(200).json({ message: "ok" })
+        }, {returning:true} ).then((result) => {
+            res.status(200).json(result )
         }).catch((error) => {
             res.status(500).send('error: ' + error)
             console.log(error)
@@ -128,19 +130,20 @@ async function deleteCategories(req, res) {
     }
 }
 async function setCategory(req, res) {
-    const { id, title, tipo, url, description, img } = req.body
-    console.log(id, title, tipo, url, description, img)
+    const { id, title, tipo, url, has_sections, is_active, description } = req.body
+    const img = req.files[0]?.buffer || ""
     try {
         await Categorias.update({
             title,
             tipo,
             url,
             description,
-            img: img ? "data:image/*;base64," + img.toString('base64') : '', 
+            img: img ? "data:image/*;base64," + img.toString('base64') : '',
             has_sections,
             is_active
-        }, { where: { id: id } }).then(() => {
-            res.status(200).json({ message: "ok" })
+        }, { where: { id: id }, returning: true }).then((result) => {
+            console.log(result[1])
+            res.status(200).json(result)
         })
     } catch (error) {
         res.status(500).send('error: ' + error)
@@ -228,10 +231,40 @@ async function modificarImagenes(req, res) {
         res.status(500).send('error: ' + error)
     }
 }
-async function obtenerImagenesCategoria(req, res) {
-    const { categoriaId } = req.params
+async function getImagesByCategoryId(req, res) {
+    const { id } = req.params
     try {
-        await Imagenes.findOne({ where: { Categorias_Conten_Id: categoriaId } }).then((rows) => {
+        await Imagenes.findAll({ where: { Categorias_Conten_Id: id } }).then((rows) => {
+            res.status(200).json(rows)
+        })
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+async function restartImagesCategory(req, res) {
+    const { id } = req.params
+    try {
+        await Imagenes.destroy({ where: { Categorias_Conten_Id: id } }).then((rows) => {
+            res.status(200).json(rows)
+        })
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+async function restartImagesSection(req, res) {
+    const { id } = req.params
+    try {
+        await Imagenes.destroy({ where: { Secciones_Conten_Id: id } }).then((rows) => {
+            res.status(200).json(rows)
+        })
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+async function restartImagesSubsection(req, res) {
+    const { id } = req.params
+    try {
+        await Imagenes.destroy({ where: { Subsecciones_Conten_Id: id } }).then((rows) => {
             res.status(200).json(rows)
         })
     } catch (error) {
@@ -334,7 +367,7 @@ async function getSectionById(req, res) {
         res.status(200).json([{
             ...
             secciones.toJSON(),
-            file: file.data, 
+            file: file.data,
             imgs
         }]);
         console.log(secciones)
@@ -343,10 +376,10 @@ async function getSectionById(req, res) {
     }
 }
 async function getSectionsByFatherId(req, res) {
-    
+
     try {
         const { id } = req.params
-        await Secciones.findAll({ where: { Categorias_Id: id }, attributes : ["id", "title", "url", "description", "Categorias_Id" ] }).then((result) => {
+        await Secciones.findAll({ where: { Categorias_Id: id }, attributes: ["id", "title", "url", "description", "Categorias_Id"] }).then((result) => {
             res.status(200).json(result)
         }).catch(() => {
             res.status(500).json({ message: "No existe registro" })
@@ -361,8 +394,8 @@ async function getSectionInfo(req, res) {
     console.log(id)
     try {
         const secciones = await Secciones.findOne({
-            where: { id: id }, 
-            attributes : ["id", "title", "url", "Categorias_Id" ]
+            where: { id: id },
+            attributes: ["id", "title", "url", "Categorias_Id"]
         });
         res.status(200).send(secciones)
     } catch (error) {
@@ -371,13 +404,18 @@ async function getSectionInfo(req, res) {
 }
 //Subsecciones
 async function initSubsection(req, res) {
-    const { title,  description, Secciones_Conten_Id } = req.body
-    console.log(title,  description, Secciones_Conten_Id)
+    const { title, url, description, Secciones_Conten_Id } = req.body
+    const img = req.files[0]?.buffer || ""
+    const file = req.files[1]?.buffer || ""
+    console.log(title, description, Secciones_Conten_Id)
     try {
         await Subsecciones.create({
             title,
+            url,
             description,
-            Secciones_Conten_Id
+            Secciones_Conten_Id,
+            img: img ? "data:image/*;base64," + img.toString('base64') : '',
+            file: file ? file.toString('base64') : '',
         }).then(() => {
             res.status(200).json({ message: "ok" })
         }).catch((error) => {
@@ -421,7 +459,7 @@ async function setSubsection(req, res) {
 async function getSubsectionsByFatherId(req, res) {
     try {
         const { id } = req.params
-        await Subsecciones.findAll({ where: { Secciones_Conten_Id: id } }).then((result) => {
+        await Subsecciones.findAll({ where: { Secciones_Conten_Id: id }, attributes: ["id", "title", "url"] }).then((result) => {
             res.status(200).json(result)
         }).catch(() => {
             res.status(500).json({ message: "No existe registro" })
@@ -432,14 +470,24 @@ async function getSubsectionsByFatherId(req, res) {
     }
 }
 async function getSubsectionsById(req, res) {
+    const { id } = req.params
     try {
-        const { id } = req.params
-        await Subsecciones.findOne({ where: { id: id } }).then((result) => {
-            res.status(200).json(result)
-        }).catch(() => {
-            res.status(500).json({ message: "No existe registro" })
-        })
+        const subseccion = await Subsecciones.findOne({
+            where: { id: id }
+        });
+        const file = await Archivos.findOne({
+            where: { Subsecciones_Conten_Id: id }
+        }) || [];
+        const imgs = await Imagenes.findAll({
+            where: { Subsecciones_Conten_Id: id }
+        }) || [];
 
+        res.status(200).json([{
+            ...
+            subseccion.toJSON(),
+            file: file.data,
+            imgs
+        }]);
     } catch (error) {
         res.status(500).send('error: ' + error)
     }
@@ -463,6 +511,9 @@ module.exports = {
     deleteFile,
     deleteCategories,
     deleteImage,
+    restartImagesCategory,
+    restartImagesSection,
+    restartImagesSubsection,
     eliminarSecciones,
     deleteSubsection,
     modificarArchivos,
@@ -475,7 +526,7 @@ module.exports = {
     obtenerArchivosSubsecciones,
     getCategoriesById,
     getCategories,
-    obtenerImagenesCategoria,
+    getImagesByCategoryId,
     obtenerImagenesSeccion,
     obtenerImagenesSubsecciones,
     getSectionInfo,
