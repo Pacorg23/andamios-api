@@ -3,6 +3,9 @@ const Categorias = require('../models/general/categorias_conten')
 const Imagenes = require('../models/general/imagenes_conten')
 const Secciones = require('../models/general/secciones_conten')
 const Subsecciones = require('../models/general/subsecciones_conten')
+const Sucursales = require('../models/general/sucursales')
+const _ = require('lodash')
+const Carrusel = require('../models/conten/carrusel')
 
 //Archivos
 async function agregarArchivos(req, res) {
@@ -391,6 +394,159 @@ async function test(req, res) {
     }
 }
 
+async function obtenerSucursales(req, res) {
+    try {
+        await Sucursales.findAll().then((rows) => {
+            res.status(200).json(rows)
+        })
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+
+async function agregarSucursales(req, res) {
+    try {
+        const { nombre, direccion, descripcion } = req.body;
+        const imagen = _.head(req.files);
+
+        await Sucursales.create({
+            nombre,
+            direccion,
+            descripcion,
+            imagen: imagen ? "data:image/*;base64," + imagen.buffer.toString('base64') : ''
+        }).then(() => {
+            res.status(200).json({ message: "ok" })
+        }).catch((error) => {
+            res.status(500).send('error: ' + error)
+        })
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+
+async function eliminarSucursales(req, res) {
+    const { id } = req.params;
+
+    try {
+        await Sucursales.findByPk(id).then((result) => {
+            Sucursales.destroy({ where: { id: result.id } }).then(() => {
+                res.status(200).json({ message: "ok" })
+            })
+        }).catch(() => {
+            res.status(500).json({ message: "No existe registro" })
+        })
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+
+async function modificarSucursales(req, res) {
+    const { id, nombre, direccion, descripcion } = req.body;
+    const imagen = _.head(req.files);
+
+    try {
+
+        if (!_.isNil(imagen)) {
+            await Sucursales.update({
+                nombre,
+                direccion,
+                descripcion,
+                imagen: imagen ? "data:image/*;base64," + imagen.buffer.toString('base64') : ''
+            }, { where: { id: id } }).then(() => {
+                res.status(200).json({ message: "ok" })
+            })
+        } else {
+            await Sucursales.update({
+                nombre,
+                direccion,
+                descripcion
+            }, { where: { id: id } }).then(() => {
+                res.status(200).json({ message: "ok" })
+            })
+        }
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+
+async function obtenerCarrusel(req, res) {
+    try {
+        await Carrusel.findAll().then((rows) => {
+            res.status(200).json(rows)
+        })
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+
+async function agregarCarrusel(req, res) {
+    try {
+        console.log(req.body)
+        console.log(req.files)
+        const { needsAction, action } = req.body;
+        const images = req.files;
+
+        await Carrusel.create({
+            filename: images[0].originalname,
+            file: images[0] ? "data:image/*;base64," + images[0].buffer.toString('base64') : '',
+            fileResponsive: images[1] ? "data:image/*;base64," + images[1].buffer.toString('base64') : '',
+            needsAction: needsAction ?? false,
+            action: action ?? ""
+        }).then(() => {
+            res.status(200).json({ message: "ok" })
+        }).catch((error) => {
+            res.status(500).send('error: ' + error)
+        });
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+
+async function editarCarrusel(req, res) {
+    const { id, needsAction, action } = req.body;
+    const images = req.files;
+
+    try {
+        if (!_.isEmpty(images)) {
+            await Carrusel.update({
+                filename: images[0].originalname,
+                file: images[0] ? "data:image/*;base64," + images[0].buffer.toString('base64') : '',
+                fileResponsive: images[1] ? "data:image/*;base64," + images[1].buffer.toString('base64') : '',
+                needsAction,
+                action
+            }, { where: { id: id } }).then(() => {
+                res.status(200).json({ message: "ok" })
+            })
+        } else {
+            await Carrusel.update({
+                needsAction,
+                action
+            }, { where: { id: id } }).then(() => {
+                res.status(200).json({ message: "ok" })
+            })
+        }
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+
+async function eliminarCarrusel(req, res) {
+    const { id } = req.params
+
+    try {
+        await Carrusel.findByPk(id).then((result) => {
+            Carrusel.destroy({ where: { id: result.id } }).then(() => {
+                res.status(200).json({ message: "ok" })
+            })
+        }).catch(() => {
+            res.status(500).json({ message: "No existe registro" })
+        })
+
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+
 module.exports = {
     //Conten
     initCategory,
@@ -419,4 +575,12 @@ module.exports = {
     obtenerSecciones,
     getSectionsById,
     obtenerSubsecciones,
+    obtenerSucursales,
+    agregarSucursales,
+    eliminarSucursales,
+    modificarSucursales,
+    agregarCarrusel,
+    obtenerCarrusel,
+    editarCarrusel,
+    eliminarCarrusel
 }

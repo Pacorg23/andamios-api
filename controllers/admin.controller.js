@@ -150,6 +150,8 @@ async function endSession(req, res) {
     const { id } = req.body;
     const { userId } = req.params;
 
+    console.log(userId)
+
     try {
 
         const foundAdmin = await Users.findOne({ where: { id: id } })
@@ -165,6 +167,24 @@ async function endSession(req, res) {
         res.status(200).json({ message: "Sesión cerrada" })
     } catch (err) {
         res.status(500).json({ message: err })
+    }
+}
+
+async function endModeratorSession(req, res) {
+    const { id } = req.params;
+
+    try {
+        const sesionFound = await Activity.findOne({ where: { user_id: id } })
+
+        if (_.isNil(sesionFound)) {
+            return res.status(401).json({ message: "No hay sesión activa" })
+        }
+
+        await Activity.destroy({ where: { id: sesionFound.id } })
+
+        res.status(200).json({ message: "Sesión cerrada" })
+    } catch (error) {
+        res.status(500).json({ message: error })
     }
 }
 
@@ -203,5 +223,6 @@ module.exports = {
     modificarUsuario,
     startSession,
     endSession,
-    checkSession
+    checkSession,
+    endModeratorSession
 }
