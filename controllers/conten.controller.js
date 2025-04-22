@@ -171,7 +171,7 @@ async function getCategories(req, res) {
     try {
         await Categorias.findAll({
             where: { is_active: 1 },
-            attributes: ["id", "title", "url", "tipo", "is_active", "has_sections","is_default"],
+            attributes: ["id", "title", "url", "tipo", "is_active", "has_sections", "is_default"],
 
         }).then((result) => {
             res.status(200).json(result)
@@ -459,7 +459,7 @@ async function setSubsection(req, res) {
     try {
         await Subsecciones.update({
             title,
-            descripcion, 
+            descripcion,
             file,
             img: img ? "data:image/*;base64," + img.toString('base64') : '',
             file: file ? file.toString('base64') : '',
@@ -697,7 +697,17 @@ module.exports = {
     getImagesByCategoryId,
     obtenerImagenesSeccion,
     obtenerImagenesSubsecciones,
-    obtenerSecciones,
-    getSectionsById,
-    obtenerSubsecciones,
+    getSectionById,
+    getSectionsByFatherId,
+    getSubsectionsById,
+    getSubsectionsByFatherId,
+    agregarSucursales,
+    obtenerSucursales,
+    eliminarSucursales,
+    modificarSucursales,
+    obtenerCarrusel,
+    agregarCarrusel,
+    eliminarCarrusel,
+    editarCarrusel,
+    getSectionInfo,
 }
