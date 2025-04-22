@@ -13,19 +13,27 @@ const Sucursales = db.sequelize.define('Sucursales', {
     },
     direccion:{
         type: DataTypes.TEXT('long'),
-        allowNull: false,
+        allowNull: true,
     },
     telefono:{
         type:DataTypes.TEXT('long'),
-        allowNull: false,
+        allowNull: true,
     },
     maps:{
         type:DataTypes.TEXT('long'),
-        allowNull: false,
+        allowNull: true,
     },
     division:{
         type:DataTypes.TEXT('long'),
-        allowNull: false,
+        allowNull: true
+    },
+    descripcion:{
+        type:DataTypes.TEXT('long'),
+        allowNull: true,
+    },
+    imagen:{
+        type:DataTypes.TEXT('long'),
+        allowNull: true,
     }
 },{
     timestamps:false

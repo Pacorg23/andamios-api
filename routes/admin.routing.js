@@ -22,6 +22,7 @@ router.get('/session', jwt.tokenMiddleware, (req, res) => {
 })
 router.post('/startSession', admin.startSession);
 router.post('/cerrarSesion/:userId',jwt.tokenMiddleware, admin.endSession);
+router.post('/endSessions/:id', jwt.tokenMiddleware, admin.endModeratorSession);
 
 
 module.exports = router;

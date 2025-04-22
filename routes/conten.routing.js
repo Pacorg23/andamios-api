@@ -45,11 +45,24 @@ router.put('/setSubsection', upload.any(), jwt.tokenMiddleware, contenController
 router.delete('/deleteSubsection/:id', jwt.tokenMiddleware, contenController.deleteSubsection)
 router.get('/getSubsectionsByFatherId/:id', jwt.tokenMiddleware, contenController.getSubsectionsByFatherId)
 
+// Sucursales
+router.post('/sucursales',upload.any(), jwt.tokenMiddleware,contenController.agregarSucursales);
+router.get('/obtenerSucursales', jwt.tokenMiddleware,contenController.obtenerSucursales);
+router.delete('/eliminarSucursales/:id', jwt.tokenMiddleware,contenController.eliminarSucursales);
+router.put('/modificarSucursales',upload.any(), jwt.tokenMiddleware,contenController.modificarSucursales);
+
+// Carrusel
+router.get('/obtenerCarrusel', jwt.tokenMiddleware,contenController.obtenerCarrusel);
+router.post('/carrusel',upload.any(), jwt.tokenMiddleware,contenController.agregarCarrusel);
+router.delete('/borrarCarrusel/:id', jwt.tokenMiddleware,contenController.eliminarCarrusel);
+router.put('/modificarCarrusel',upload.any(), jwt.tokenMiddleware,contenController.editarCarrusel);
+
 //Teest
 // router.get('/conten/test', contenController.test)
 
-// //ZONA JSON
-// router.use(express.json())
+//  ZONA JSON
+ router.use(express.json());
+
 // //Anuncio
 // router.post('/agregarAnuncio',upload.any(),jwt.tokenMiddleware ,contenController.crearAnuncio)
 // router.get('/obtenerAnuncio',jwt.tokenMiddleware,contenController.obtenerAnuncio)
