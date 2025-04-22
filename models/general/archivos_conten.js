@@ -10,63 +10,61 @@ const ArchivosConten = db.sequelize.define('Archivos_Conten', {
         primaryKey: true,
         autoIncrement: true,
     },
-    title:{
+    title: {
         type: DataTypes.TEXT,
         allowNull: false,
     },
-    Secciones_Conten_Id:{
+    Secciones_Conten_Id: {
         type: DataTypes.INTEGER,
-        allowNull:true,
-        foreignKey: true
+        allowNull: true
     },
-    Subsecciones_Conten_Id:{
+    Subsecciones_Conten_Id: {
         type: DataTypes.INTEGER,
-        allowNull:true,
-        foreignKey: true
+        allowNull: true
     },
-    Categorias_Conten_Id:{
+    Categorias_Conten_Id: {
         type: DataTypes.INTEGER,
-        allowNull:true,
-        foreignKey: true
+        allowNull: true
     },
-    data:{
+    data: {
         type: DataTypes.TEXT('long'),
-        allowNull:false
+        allowNull: false
     },
 
-},{
-    timestamps:false
+}, {
+    timestamps: false
 })
 
-
-/*ArchivosConten.belongsTo( SeccionesConten, {
-    foreignKey: 'Secciones_Conten_Id',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
-ArchivosConten.belongsTo( SubseccionesConten, {
-    foreignKey: 'Subsecciones_Conten_Id',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
-ArchivosConten.belongsTo( CategoriasConten, {
-    foreignKey: 'Categorias_Conten_Id',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
-SeccionesConten.hasMany(ArchivosConten, {
-    foreignKey: 'Secciones_Conten_Id',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
-SubseccionesConten.hasMany(ArchivosConten, {
-    foreignKey: 'Subsecciones_Conten_Id',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
-CategoriasConten.hasMany(ArchivosConten, {
-    foreignKey: 'Categorias_Conten_Id',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});*/
+//Esta estan chill
+// CategoriasConten.hasMany(ArchivosConten, {
+//     foreignKey: 'Categorias_Conten_Id',
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE'
+// });
+// ArchivosConten.belongsTo(CategoriasConten, {
+//     foreignKey: 'Categorias_Conten_Id',
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE'
+// });
+// //Estas no
+// ArchivosConten.belongsTo( SeccionesConten, {
+//     foreignKey: 'Secciones_Conten_Id',
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE'
+// });
+// SeccionesConten.hasMany(ArchivosConten, {
+//     foreignKey: 'Secciones_Conten_Id',
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE'
+// });
+// ArchivosConten.belongsTo( SubseccionesConten, {
+//     foreignKey: 'Subsecciones_Conten_Id',
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE'
+// });
+// SubseccionesConten.hasMany(ArchivosConten, {
+//     foreignKey: 'Subsecciones_Conten_Id',
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE'
+// });
 module.exports = ArchivosConten
