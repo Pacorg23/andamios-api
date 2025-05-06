@@ -22,7 +22,7 @@ const initialCategories = [
         has_sections: true,
         url: 'manufactura',
         is_default: false,
-        description: 'Descripción de la categoría B',
+        description: '<p>En nuestra división de Manufactura, actualmente contamos con maquinaria especializada y perfectas instalaciones que nos permiten cortar, doblar, troquelar, soldar materiales de acero en gran volumen. </p>',
         img: null,
         pdf: null
     },
@@ -52,7 +52,7 @@ const initialCategories = [
         title: 'NUESTRAS CERTIFICACIONES',
         tipo: 'D',
         is_active: true,
-        has_sections: false,
+        has_sections: true,
         url: 'certificaciones',
         is_default: false,
         description: 'Descripción de la categoría E',
