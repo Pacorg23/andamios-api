@@ -8,7 +8,7 @@ const initialCategories = [
         tipo: 'INITAL',
         is_active: true,
         has_sections: true,
-        url: '/conten',
+        url: 'conten',
         is_default: true,
         is_active: true,
         description: '',
@@ -21,7 +21,7 @@ const initialCategories = [
         is_active: true,
         has_sections: true,
         url: 'manufactura',
-        is_default: false,
+        is_default: true,
         description: '<p>En nuestra división de Manufactura, actualmente contamos con maquinaria especializada y perfectas instalaciones que nos permiten cortar, doblar, troquelar, soldar materiales de acero en gran volumen. </p>',
         img: null,
         pdf: null
@@ -31,8 +31,8 @@ const initialCategories = [
         tipo: 'A',
         is_active: true,
         has_sections: true,
-        url: 'ingenieria',
-        is_default: false,
+        url: 'diseno-e-ingenieria',
+        is_default: true,
         description: 'Descripción de la categoría C',
         img: null,
         pdf: null
@@ -43,7 +43,7 @@ const initialCategories = [
         is_active: true,
         has_sections: true,
         url: 'productos',
-        is_default: false,
+        is_default: true,
         description: 'Descripción de la categoría D',
         img: null,
         pdf: null
@@ -53,8 +53,8 @@ const initialCategories = [
         tipo: 'D',
         is_active: true,
         has_sections: true,
-        url: 'certificaciones',
-        is_default: false,
+        url: 'nuestras-certificaciones',
+        is_default: true,
         description: 'Descripción de la categoría E',
         img: null,
         pdf: null

@@ -530,6 +530,7 @@ async function obtenerNavBarConten(req, res) {
             title: categoria.title,
             tipo: categoria.tipo,
             is_active: categoria.is_active,
+            is_default: categoria.is_default,
             has_sections: categoria.has_sections,
             url: categoria.url,
             secciones: secciones
@@ -582,6 +583,7 @@ async function obtenerCategoria(req, res) {
             title: categoria.title,
             tipo: categoria.tipo,
             is_active: categoria.is_active,
+            is_default: categoria.is_default,
             has_sections: categoria.has_sections,
             url: categoria.url,
             img: categoria.img,
@@ -630,19 +632,19 @@ async function obtenerCategoria(req, res) {
         return res.status(500).json({ message: "Error al obtener categoría", error });
     }
 }
-async function obtenerSeccionManufact(req, res) {
+async function obtenerSeccionConten(req, res) {
     try {
         const { url } = req.params
 
         // Obtener secciones relacionadas
         const secciones = await SeccionesConten.findOne({ where: { url: url } });
 
-        const seccionesIds = secciones.map(categoria => categoria.id);
+        const seccionesIds = [secciones].map(categoria => categoria.id);
 
-        const imagenesSecciones = await ImagenesConten.findAll({ where: { Secciones_Conten_Id: seccionesIds } });
+        const imagenesSecciones = await ImagenesConten.findAll({ where: { Secciones_Conten_Id: secciones.id } });
 
         // Construir respuesta
-        const response = secciones
+        const response = [secciones]
             .map(seccion => ({
                 id: seccion.id,
                 title: seccion.title,
@@ -665,7 +667,7 @@ async function obtenerSeccionManufact(req, res) {
     }
 }
 
-async function obtenerSubSeccionManufact(req, res) {
+async function obtenerSubSeccionConten(req, res) {
     try {
         const { url } = req.params
         var subsecciones = []
@@ -698,6 +700,7 @@ async function obtenerSubSeccionManufact(req, res) {
     }
 }
 
+
 module.exports = {
     obtenerArchivo,
     obtenerComunicados,
@@ -717,6 +720,6 @@ module.exports = {
     obtenerNavBarConten,
     getCategoriaContenPorId,
     obtenerCategoria,
-    obtenerSeccionManufact,
-    obtenerSubSeccionManufact
+    obtenerSeccionConten,
+    obtenerSubSeccionConten
 }
