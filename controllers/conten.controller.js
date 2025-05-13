@@ -7,6 +7,7 @@ const Sucursales = require('../models/general/sucursales')
 const _ = require('lodash')
 const Carrusel = require('../models/conten/carrusel')
 const { options } = require('../routes/conten.routing')
+const ImagenesConten = require('../models/general/imagenes_conten')
 
 //Archivos
 async function initFile(req, res) {
@@ -98,6 +99,11 @@ async function initCategory(req, res) {
         console.log(req.body)
         const { title, tipo, url, description, has_sections, is_active } = req.body
         const img = req.files[0]?.buffer || ""
+
+        var resultError = await Categorias.findOne({ where: { url: url } })
+        if (resultError) {
+            throw 409; // error de registro duplicado
+        }
         await Categorias.create({
             title,
             tipo,
@@ -113,7 +119,13 @@ async function initCategory(req, res) {
             console.log(error)
         })
     } catch (error) {
-        res.status(500).send('error: ' + error)
+        if (error == 409) {
+
+            res.status(409).send('error:  error de registro duplicado')
+        } else {
+
+            res.status(500).send('error: ' + error)
+        }
     }
 }
 async function deleteCategories(req, res) {
@@ -155,12 +167,28 @@ async function setCategory(req, res) {
 async function getCategoriesById(req, res) {
     const { id } = req.params
     try {
-        await Categorias.findOne({ where: { id: id } }).then((result) => {
-            res.status(200).json(result)
-        }).catch(() => {
-            res.status(500).json({ message: "No existe registro" })
-        })
+        const categoria = await Categorias.findOne({ where: { id: id } });
 
+        const imagenesCategoria = await ImagenesConten.findAll({ where: { Categorias_Conten_Id: id } })
+
+        const response = [categoria]
+            .map(categoria => ({
+                id: categoria.id,
+                title: categoria.title,
+                tipo: categoria.tipo,
+                is_active: categoria.is_active,
+                is_default: categoria.is_default,
+                has_sections: categoria.has_sections,
+                url: categoria.url,
+                img: categoria.img,
+                description: categoria.description,
+                imgs: imagenesCategoria ? imagenesCategoria
+                    .map(imagen => ({
+                        id: imagen.id,
+                        data: imagen.data ? imagen.data : ''
+                    })) : ''
+            }))
+        return res.status(200).json(response[0])
     } catch (error) {
         res.status(500).send('error: ' + error)
     }
@@ -305,8 +333,11 @@ async function initSection(req, res) {
     const { title, url, description, Categorias_Id } = req.body
     const img = req.files[0]?.buffer || ""
     const file = req.files[1]?.buffer || ""
-    console.log(title, url, description, Categorias_Id)
     try {
+        var resultError = await Secciones.findOne({ where: { url: url } })
+        if (resultError) {
+            throw 409; // error de registro duplicado
+        }
         await Secciones.create({
             title,
             url,
@@ -321,7 +352,14 @@ async function initSection(req, res) {
             res.status(500).send('error: ' + error)
         })
     } catch (error) {
-        res.status(500).send('error: ' + error)
+        console.log(error)
+        if (error == 409) {
+
+            res.status(409).send('error:  error de registro duplicado')
+        } else {
+
+            res.status(500).send('error: ' + error)
+        }
     }
 }
 async function eliminarSecciones(req, res) {
@@ -417,6 +455,11 @@ async function initSubsection(req, res) {
     const img = req.files[0]?.buffer || ""
     const file = req.files[1]?.buffer || ""
     console.log(title, description, Secciones_Conten_Id)
+
+    var resultError = await Subsecciones.findOne({ where: { url: url } })
+    if (resultError) {
+        throw 409; // error de registro duplicado
+    }
     try {
         await Subsecciones.create({
             title,
@@ -432,7 +475,13 @@ async function initSubsection(req, res) {
             res.status(500).send('error: ' + error)
         })
     } catch (error) {
-        res.status(500).send('error: ' + error)
+        if (error == 409) {
+
+            res.status(409).send('error:  error de registro duplicado')
+        } else {
+
+            res.status(500).send('error: ' + error)
+        }
     }
 }
 async function deleteSubsection(req, res) {
@@ -452,14 +501,15 @@ async function deleteSubsection(req, res) {
     }
 }
 async function setSubsection(req, res) {
-    const { id, title, descripcion } = req.body
+    const { id, title, description } = req.body
+    // console.log(id, title, descripcion)
     const img = req.files[0]?.buffer || ""
     const file = req.files[1]?.buffer || ""
 
     try {
         await Subsecciones.update({
             title,
-            descripcion,
+            description,
             file,
             img: img ? "data:image/*;base64," + img.toString('base64') : '',
             file: file ? file.toString('base64') : '',

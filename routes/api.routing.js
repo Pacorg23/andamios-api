@@ -38,6 +38,9 @@ router.get('/obtenerSubseccion/seccion/:seccion',api.getSubseccionPorPadre)
 
 //** CONTEN **//
 router.get('/obtenerNavBarConten',api.obtenerNavBarConten)
+router.get('/obtenerCategoria/:url',api.obtenerCategoria)
+router.get('/obtenerSeccionConten/:url',api.obtenerSeccionConten)
+router.get('/obtenerSubSeccionConten/:url',api.obtenerSubSeccionConten)
 
 
 module.exports = router;

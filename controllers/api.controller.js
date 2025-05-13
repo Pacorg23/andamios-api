@@ -18,6 +18,7 @@ const ImagenesConten = require("../models/general/imagenes_conten")
 const CategoriasConten = require("../models/general/categorias_conten")
 const SeccionesConten = require("../models/general/secciones_conten")
 const SubseccionesConten = require("../models/general/subsecciones_conten")
+const { where } = require("sequelize")
 
 async function obtenerArchivo(req, res) {
     const { origen } = req.params
@@ -529,6 +530,7 @@ async function obtenerNavBarConten(req, res) {
             title: categoria.title,
             tipo: categoria.tipo,
             is_active: categoria.is_active,
+            is_default: categoria.is_default,
             has_sections: categoria.has_sections,
             url: categoria.url,
             secciones: secciones
@@ -536,7 +538,8 @@ async function obtenerNavBarConten(req, res) {
                 .map(seccion => ({
                     id: seccion.id,
                     title: seccion.title,
-                    descripcion: seccion.descripcion
+                    descripcion: seccion.descripcion,
+                    url: seccion.url
                 }))
         }));
 
@@ -547,6 +550,156 @@ async function obtenerNavBarConten(req, res) {
         return res.status(500).json({ message: "Error al obtener categoría", error });
     }
 }
+async function obtenerCategoria(req, res) {
+    try {
+        const { url } = req.params
+        var subsecciones = []
+        var SubseccionesnesIds = []
+        var imagenesSubsecciones = []
+        // Obtener categorías
+        const categoria = await CategoriasConten.findOne({ where: { url: url } });
+        if (!categoria) {
+            return res.status(404).json({ message: "Categoría no encontrada" });
+        }
+        const imagenesCategoria = await ImagenesConten.findAll({ where: { Categorias_Conten_Id: categoria.id } });
+
+        // Obtener secciones relacionadas
+        const secciones = await SeccionesConten.findAll({ where: { Categorias_Id: categoria.id } });
+
+        const seccionesIds = secciones.map(categoria => categoria.id);
+
+        const imagenesSecciones = await ImagenesConten.findAll({ where: { Secciones_Conten_Id: seccionesIds } });
+        // Obtener subsecciones relacionadas
+        if (categoria.tipo == "B") {
+
+            subsecciones = await SubseccionesConten.findAll({ where: { Secciones_Conten_Id: seccionesIds } });
+            SubseccionesnesIds = subsecciones.map(categoria => categoria.id);
+            imagenesSubsecciones = await ImagenesConten.findAll({ where: { Subsecciones_Conten_Id: SubseccionesnesIds } });
+        }
+
+        // Construir respuesta
+        const response = [categoria].map(categoria => ({
+            id: categoria.id,
+            title: categoria.title,
+            tipo: categoria.tipo,
+            is_active: categoria.is_active,
+            is_default: categoria.is_default,
+            has_sections: categoria.has_sections,
+            url: categoria.url,
+            img: categoria.img,
+            imgs: imagenesCategoria ? imagenesCategoria
+                .filter(imagen => imagen.Categorias_Conten_Id == categoria.id)
+                .map(imgaen => ({
+                    id: imgaen.id,
+                    data: imgaen.data ? imgaen.data : ''
+                })) : '',
+            description: categoria.description,
+            sections: secciones
+                .filter(seccion => seccion.Categorias_Id === categoria.id)
+                .map(seccion => ({
+                    id: seccion.id,
+                    title: seccion.title,
+                    description: seccion.description,
+                    url: seccion.url,
+                    img: seccion.img,
+                    imgs: imagenesSecciones ? imagenesSecciones
+                        .filter(imagen => imagen.Secciones_Conten_Id == seccion.id)
+                        .map(imgaen => ({
+                            id: imgaen.id,
+                            data: imgaen.data ? imgaen.data : ''
+                        })) : '',
+                    subSecciones: subsecciones ? subsecciones
+                        .filter(subseccion => subseccion.Secciones_Conten_Id === seccion.id)
+                        .map(subseccion => ({
+                            id: subseccion.id,
+                            title: subseccion.title,
+                            img: subseccion.img ? subseccion.img : '',
+                            imgs: imagenesSubsecciones ? imagenesSubsecciones
+                                .filter(imagen => imagen.Subsecciones_Conten_Id == subseccion.id)
+                                .map(imgaen => ({
+                                    id: imgaen.id,
+                                    data: imgaen.data ? imgaen.data : ''
+                                })) : '',
+                        }))
+                        : ''
+                }))
+        }))[0];
+
+        // Responder con éxito
+        return res.status(200).json(response);
+    } catch (error) {
+        console.error("Error en obtenerNavBarConten: ", error);
+        return res.status(500).json({ message: "Error al obtener categoría", error });
+    }
+}
+async function obtenerSeccionConten(req, res) {
+    try {
+        const { url } = req.params
+
+        // Obtener secciones relacionadas
+        const secciones = await SeccionesConten.findOne({ where: { url: url } });
+
+        const seccionesIds = [secciones].map(categoria => categoria.id);
+
+        const imagenesSecciones = await ImagenesConten.findAll({ where: { Secciones_Conten_Id: secciones.id } });
+
+        // Construir respuesta
+        const response = [secciones]
+            .map(seccion => ({
+                id: seccion.id,
+                title: seccion.title,
+                description: seccion.description,
+                url: seccion.url,
+                img: seccion.img,
+                imgs: imagenesSecciones ? imagenesSecciones
+                    .filter(imagen => imagen.Secciones_Conten_Id == seccion.id)
+                    .map(imgaen => ({
+                        id: imgaen.id,
+                        data: imgaen.data ? imgaen.data : ''
+                    })) : '',
+            }))
+
+        // Responder con éxito
+        return res.status(200).json(response);
+    } catch (error) {
+        console.error("Error en obtenerNavBarConten: ", error);
+        return res.status(500).json({ message: "Error al obtener categoría", error });
+    }
+}
+
+async function obtenerSubSeccionConten(req, res) {
+    try {
+        const { url } = req.params
+        var subsecciones = []
+        var SubseccionesnesIds = []
+        var imagenesSubsecciones = []
+
+        subsecciones = await SubseccionesConten.findOne({ where: { url: url } });
+        imagenesSubsecciones = await ImagenesConten.findAll({ where: { Subsecciones_Conten_Id: subsecciones.id } });
+
+        // Construir respuesta
+        const response = [subsecciones]
+            .map(subseccion => ({
+                id: subseccion.id,
+                title: subseccion.title,
+                description: subseccion.description,
+                img: subseccion.img ? subseccion.img : '',
+                imgs: imagenesSubsecciones ? imagenesSubsecciones
+                    .filter(imagen => imagen.Subsecciones_Conten_Id == subseccion.id)
+                    .map(imgaen => ({
+                        id: imgaen.id,
+                        data: imgaen.data ? imgaen.data : ''
+                    })) : '',
+            }))
+
+        // Responder con éxito
+        return res.status(200).json(response);
+    } catch (error) {
+        console.error("Error en obtenerNavBarConten: ", error);
+        return res.status(500).json({ message: "Error al obtener categoría", error });
+    }
+}
+
 
 module.exports = {
     obtenerArchivo,
@@ -565,5 +718,8 @@ module.exports = {
     getSubseccion,
     getSubseccionPorPadre,
     obtenerNavBarConten,
-    getCategoriaContenPorId
+    getCategoriaContenPorId,
+    obtenerCategoria,
+    obtenerSeccionConten,
+    obtenerSubSeccionConten
 }
