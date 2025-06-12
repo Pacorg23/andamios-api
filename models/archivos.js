@@ -12,13 +12,13 @@ const Archivos = db.sequelize.define('Archivos', {
         allowNull: false,
     },
     file: {
-        type: DataTypes.STRING, // Puedes ajustar según tu necesidad, también puedes usar DataTypes.BLOB para almacenar el contenido directamente
+        type: DataTypes.TEXT('long'),
         allowNull: false,
     },
-    origen: {   
+    origen: {
         type: DataTypes.STRING,
         allowNull: false
-    }   
+    }
 }, {
     timestamps: false
 });

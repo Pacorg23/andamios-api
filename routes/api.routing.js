@@ -42,5 +42,11 @@ router.get('/obtenerCategoria/:url',api.obtenerCategoria)
 router.get('/obtenerSeccionConten/:url',api.obtenerSeccionConten)
 router.get('/obtenerSubSeccionConten/:url',api.obtenerSubSeccionConten)
 
+//CARRUSEL
+router.get('/obtenerCarruselConten', api.obtenerCarruselConten)
+
+//PLANTAS
+router.get('/obtenerPlantas', api.obtenerSucursalesConten)
+
 
 module.exports = router;
