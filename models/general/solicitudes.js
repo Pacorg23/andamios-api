@@ -24,7 +24,7 @@ const Solicitudes = db.sequelize.define('Solicitudes', {
       allowNull: false,
     },
     telefono: {
-      type: DataTypes.INTEGER(12),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     //CV INFO
