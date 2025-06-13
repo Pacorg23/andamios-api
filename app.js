@@ -27,6 +27,17 @@ db.checkDatabaseConnection().then(() => {
     app.use('/api', api); // -> CLIENT
     app.use('/conten', conten); //-> ADMIN
 
+    app.use('/liveness', (req, res) => {
+        res.status(200).json({
+            message: "Esta viva la aplicacion\n"
+        })
+    });
+
+    app.use('/', (req, res) => {
+        res.status(200).json({
+            message: "Bienvenido a la API de Andamios"
+        })
+    });
 
     /* INICIA EL SERVIDOR CON HTTP POR EL SOCKET*/
     app.listen(process.env.PORT_SYS, function () {

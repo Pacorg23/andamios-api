@@ -18,7 +18,7 @@ const ImagenesConten = require("../models/general/imagenes_conten")
 const CategoriasConten = require("../models/general/categorias_conten")
 const SeccionesConten = require("../models/general/secciones_conten")
 const SubseccionesConten = require("../models/general/subsecciones_conten")
-const { where } = require("sequelize")
+const CarruselConten = require("../models/conten/carrusel")
 
 async function obtenerArchivo(req, res) {
     const { origen } = req.params
@@ -51,7 +51,7 @@ async function crearSolicitud(req, res) {
     const file = req.files[0]
 
     try {
-        await Solicitudes.create({
+        const solicitud = await Solicitudes.create({
             nombre: nombre,
             escolaridad: escolaridad,
             area: area,
@@ -60,13 +60,11 @@ async function crearSolicitud(req, res) {
             filename: file.originalname,
             file: file.buffer.toString('base64'),
             division: division
-        }).then((solicitud) => {
-            res.status(200).send(solicitud)
-        }).catch((err) => {
-            res.status(500).json({ message: err })
-        })
+        });
+
+        res.status(200).send(solicitud);
     } catch (err) {
-        res.status(500).json({ message: "error" })
+        res.status(500).json({ message: err.name })
     }
 }
 
@@ -719,6 +717,38 @@ async function obtenerSubSeccionConten(req, res) {
     }
 }
 
+/**
+ * @description Obtiene el carrusel de contenidos
+ * @param {Request} req (req)
+ * @param {Response} res (status, message)
+ */
+async function obtenerCarruselConten(req, res) {
+    try {
+        await CarruselConten.findAll().then((rows) => {
+            res.status(200).json(rows)
+        });
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+
+/**
+ * @description Obtiene las sucursales sin división
+ * @param {Request} req (req)
+ * @param {Response} res (status, message)
+ */
+async function obtenerSucursalesConten(req, res) {
+    try {
+        await Sucursales.findAll(
+            { where: { division: null } }
+        ).then((rows) => {
+            res.status(200).send(rows)
+        });
+    } catch (error) {
+        res.status(500).send('error: ' + error)
+    }
+}
+
 
 module.exports = {
     obtenerArchivo,
@@ -740,5 +770,7 @@ module.exports = {
     getCategoriaContenPorId,
     obtenerCategoria,
     obtenerSeccionConten,
-    obtenerSubSeccionConten
+    obtenerSubSeccionConten,
+    obtenerCarruselConten,
+    obtenerSucursalesConten
 }
