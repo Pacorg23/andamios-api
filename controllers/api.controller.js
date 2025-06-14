@@ -466,7 +466,6 @@ async function getSubseccionPorPadre(req, res) {
 async function getCategoriaContenPorId(req, res) {
     try {
         const { id } = req.params;
-        console.log(req.paras)
         const categoria = await CategoriasConten.findOne({ where: { id } });
 
         if (!categoria) {

@@ -214,7 +214,6 @@ async function obtenerSeccion(req, res) { //obtiene seccion por id
                     { where: { id_elemento: seccion.id } }
                 )
             } else {
-                console.log("No pdf init")
             }
         }
 
@@ -344,7 +343,6 @@ async function obtenerSubseccion(req, res) { //obtiene subseccion por id
                     { where: { id_elemento: subseccion.id } }
                 )
             } else {
-                console.log("No pdf init")
             }
         }
 
