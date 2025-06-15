@@ -466,7 +466,6 @@ async function getSubseccionPorPadre(req, res) {
 async function getCategoriaContenPorId(req, res) {
     try {
         const { id } = req.params;
-        console.log(req.paras)
         const categoria = await CategoriasConten.findOne({ where: { id } });
 
         if (!categoria) {
@@ -633,6 +632,7 @@ async function obtenerCategoria(req, res) {
 async function obtenerSeccionConten(req, res) {
     try {
         const { url } = req.params
+        var subsecciones = []
 
         // Obtener secciones relacionadas
         const secciones = await SeccionesConten.findOne({ where: { url: url } });
@@ -640,6 +640,10 @@ async function obtenerSeccionConten(req, res) {
         const seccionesIds = [secciones].map(categoria => categoria.id);
 
         const imagenesSecciones = await ImagenesConten.findAll({ where: { Secciones_Conten_Id: secciones.id } });
+
+        subsecciones = await SubseccionesConten.findAll({ where: { Secciones_Conten_Id: seccionesIds } });
+        SubseccionesnesIds = subsecciones.map(categoria => categoria.id);
+        imagenesSubsecciones = await ImagenesConten.findAll({ where: { Subsecciones_Conten_Id: SubseccionesnesIds } });
 
         // Construir respuesta
         const response = [secciones]
@@ -655,6 +659,20 @@ async function obtenerSeccionConten(req, res) {
                         id: imgaen.id,
                         data: imgaen.data ? imgaen.data : ''
                     })) : '',
+                subSecciones: subsecciones ? subsecciones
+                    .filter(subseccion => subseccion.Secciones_Conten_Id === seccion.id)
+                    .map(subseccion => ({
+                        id: subseccion.id,
+                        title: subseccion.title,
+                        img: subseccion.img ? subseccion.img : '',
+                        imgs: imagenesSubsecciones ? imagenesSubsecciones
+                            .filter(imagen => imagen.Subsecciones_Conten_Id == subseccion.id)
+                            .map(imgaen => ({
+                                id: imgaen.id,
+                                data: imgaen.data ? imgaen.data : ''
+                            })) : '',
+                    }))
+                    : ''
             }))
 
         // Responder con éxito

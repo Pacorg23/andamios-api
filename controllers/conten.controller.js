@@ -96,7 +96,6 @@ async function obtenerArchivosSubsecciones(req, res) {
 //Categorias
 async function initCategory(req, res) {
     try {
-        console.log(req.body)
         const { title, tipo, url, description, has_sections, is_active } = req.body
         const img = req.files[0]?.buffer || ""
 
@@ -157,7 +156,6 @@ async function setCategory(req, res) {
             has_sections,
             is_active
         }, { where: { id: id }, returning: true }).then((result) => {
-            console.log(result[1])
             res.status(200).json(result)
         })
     } catch (error) {
@@ -217,8 +215,6 @@ async function initImage(req, res) {
     const { title, Secciones_Conten_Id, Subsecciones_Conten_Id, Categorias_Conten_Id } = req.body
 
     const data = req.files[0]?.buffer || ""
-    console.log("title, Secciones_Conten_Id, Subsecciones_Conten_Id, Categorias_Conten_Id")
-    console.log(title, Secciones_Conten_Id, Subsecciones_Conten_Id, Categorias_Conten_Id)
     try {
         await Imagenes.create({
             title,
@@ -346,7 +342,6 @@ async function initSection(req, res) {
             img: img ? "data:image/*;base64," + img.toString('base64') : '',
             file: file ? file.toString('base64') : '',
         }).then((result) => {
-            console.log(result.id)
             res.status(200).json({ id: result.id, message: "ok" })
         }).catch((error) => {
             res.status(500).send('error: ' + error)
@@ -399,7 +394,6 @@ async function setSection(req, res) {
 }
 async function getSectionById(req, res) {
     const { id } = req.params
-    console.log("test")
     try {
         const secciones = await Secciones.findOne({
             where: { id: id }
@@ -417,7 +411,6 @@ async function getSectionById(req, res) {
             file: file.data,
             imgs
         }]);
-        console.log(secciones)
     } catch (error) {
         res.status(500).send('error: ' + error)
     }
@@ -438,7 +431,6 @@ async function getSectionsByFatherId(req, res) {
 }
 async function getSectionInfo(req, res) {
     const { id } = req.params
-    console.log(id)
     try {
         const secciones = await Secciones.findOne({
             where: { id: id },
@@ -454,7 +446,6 @@ async function initSubsection(req, res) {
     const { title, url, description, Secciones_Conten_Id } = req.body
     const img = req.files[0]?.buffer || ""
     const file = req.files[1]?.buffer || ""
-    console.log(title, description, Secciones_Conten_Id)
 
     var resultError = await Subsecciones.findOne({ where: { url: url } })
     if (resultError) {
@@ -502,7 +493,6 @@ async function deleteSubsection(req, res) {
 }
 async function setSubsection(req, res) {
     const { id, title, description } = req.body
-    // console.log(id, title, descripcion)
     const img = req.files[0]?.buffer || ""
     const file = req.files[1]?.buffer || ""
 
@@ -653,8 +643,6 @@ async function obtenerCarrusel(req, res) {
 
 async function agregarCarrusel(req, res) {
     try {
-        console.log(req.body)
-        console.log(req.files)
         const { needsAction, action } = req.body;
         const images = req.files;
 
