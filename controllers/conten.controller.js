@@ -196,7 +196,6 @@ async function getCategories(req, res) {
 
     try {
         await Categorias.findAll({
-            where: { is_active: 1 },
             attributes: ["id", "title", "url", "tipo", "is_active", "has_sections", "is_default"],
 
         }).then((result) => {

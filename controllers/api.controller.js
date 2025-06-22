@@ -69,7 +69,7 @@ async function crearSolicitud(req, res) {
 }
 
 async function crearContacto(req, res) {
-    const { nombre, empresa, fijo, celular, correo, estadoIN, estadoOUT, area, duda } = req.body
+    const { nombre, empresa, fijo, celular, correo, estadoIN, estadoOUT, area, duda, division } = req.body
     try {
         await Contactos.create({
             nombre: nombre,
@@ -80,7 +80,8 @@ async function crearContacto(req, res) {
             estadoIN: estadoIN,
             estadoOUT: estadoOUT,
             area: area,
-            duda: duda
+            duda: duda,
+            division: division
         }).then((solicitud) => {
             res.status(200).send(solicitud)
         }).catch((err) => {
