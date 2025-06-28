@@ -94,6 +94,32 @@ async function obtenerArchivosSubsecciones(req, res) {
     }
 }
 //Categorias
+
+async function toggleActive(req, res) {
+    try {
+        const { id } = req.params
+
+        await Categorias.findByPk(id).then((result) => {
+            if (!result) {
+                throw 404; // error de registro no encontrado
+            }
+            result.is_active = !result.is_active
+            result.save().then(() => {
+                res.status(200).json({ message: "ok" })
+            })
+        }).catch(() => {
+            res.status(500).json({ message: "No existe registro" })
+        })
+
+    } catch (error) {
+        if (error == 404) {
+            res.status(404).send('error:  error de registro no encontrado')
+        } else {
+            res.status(500).send('error: ' + error)
+        }
+    }
+}
+
 async function initCategory(req, res) {
     try {
         const { title, tipo, url, description, has_sections, is_active } = req.body
@@ -708,6 +734,7 @@ async function eliminarCarrusel(req, res) {
 
 module.exports = {
     //Conten
+    toggleActive,
     initCategory,
     initFile,
     initImage,
