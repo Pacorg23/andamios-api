@@ -42,6 +42,10 @@ const Contactos = db.sequelize.define('Contactos', {
     area:{
         type: DataTypes.TEXT,
         allowNull: false,
+    },
+    division:{
+        type: DataTypes.TEXT,
+        allowNull: false,
     }
 },{
     timestamps:true,

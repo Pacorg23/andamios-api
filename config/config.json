@@ -1,0 +1,24 @@
+
+{
+  "development": {
+    "username": "sa",
+    "password": "Admin1prueba.",
+    "database": "atlas",
+    "host": "localhost",
+    "dialect": "mssql"
+  },
+  "test": {
+    "username": "sa",
+    "password": "Andamios1prueba.",
+    "database": "atlas",
+    "host": "localhost:1433",
+    "dialect": "mssql"
+  },
+  "production": {
+    "username": "sa",
+    "password": "Andamios1prueba.",
+    "database": "atlas",
+    "host": "localhost:1433",
+    "dialect": "mssql"
+  }
+}

@@ -16,6 +16,7 @@ router.get('conten/obtenerArchivosSeccion', jwt.tokenMiddleware, contenControlle
 router.get('conten/obtenerArchivosSubsecciones', jwt.tokenMiddleware, contenController.obtenerArchivosSubsecciones)
 
 //Categorias
+router.post('/toggleActive/:id', upload.any(), jwt.tokenMiddleware, contenController.toggleActive)
 router.post('/initCategory', upload.any(), jwt.tokenMiddleware, contenController.initCategory)
 router.delete('/deleteCategories/:id', jwt.tokenMiddleware, contenController.deleteCategories)
 router.put('/setCategory', upload.any(), jwt.tokenMiddleware, contenController.setCategory)

@@ -756,7 +756,7 @@ async function obtenerSeccionesYSubsecciones(idCategoria) {
 async function obtenerSolicitudesContacto(req, res) {
     try {
         const { area } = req.params
-        await Contactos.findAll({ where: { area: area } }).then((rows) => {
+        await Contactos.findAll({ where: { division: area } }).then((rows) => {
             const solicitudes = rows.map(soli => ({
                 id: soli.id,
                 nombre: soli.nombre,

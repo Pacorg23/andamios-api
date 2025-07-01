@@ -7,7 +7,7 @@ const path = require('path');
 const initialCategories = [
     {
         title: 'NOSOTROS',
-        tipo: 'INITAL',
+        tipo: 'INITIAL',
         is_active: true,
         has_sections: true,
         url: 'conten',
