@@ -600,6 +600,7 @@ async function obtenerCategoria(req, res) {
                     description: seccion.description,
                     url: seccion.url,
                     img: seccion.img,
+                    file: seccion.file ?? '',
                     imgs: imagenesSecciones ? imagenesSecciones
                         .filter(imagen => imagen.Secciones_Conten_Id == seccion.id)
                         .map(imgaen => ({
@@ -654,6 +655,7 @@ async function obtenerSeccionConten(req, res) {
                 description: seccion.description,
                 url: seccion.url,
                 img: seccion.img,
+                file: seccion.file ?? '',
                 imgs: imagenesSecciones ? imagenesSecciones
                     .filter(imagen => imagen.Secciones_Conten_Id == seccion.id)
                     .map(imgaen => ({

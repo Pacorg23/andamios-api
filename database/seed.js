@@ -1,6 +1,8 @@
 const Users = require('../models/admin/usuarios');
 const Categories = require('../models/general/categorias_conten');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const path = require('path');
 
 const initialCategories = [
     {
@@ -61,6 +63,21 @@ const initialCategories = [
     }
 ];
 
+initialCategories.forEach((category) => {
+    // Usamos la URL como nombre de archivo con extensión .jpg
+    const fileName = `${category.url}.png`;
+    const base = './media/conten/';
+    const filePath = path.join(base, fileName);
+
+    if (fs.existsSync(filePath)) {
+        const fileBuffer = fs.readFileSync(filePath);
+        const base64String = fileBuffer.toString('base64');
+        category.img = `data:image/*;base64,${base64String}`;
+    } else {
+        console.warn(`⚠️ Archivo no encontrado: ${filePath}`);
+    }
+});
+
 /**
  * @description Crea un usuario admin si no existe
  */
@@ -69,12 +86,19 @@ async function seedAdminUser() {
         const adminExists = await Users.findOne({ where: { user: 'admin' } });
 
         if (!adminExists) {
-            //const hashedPassword = await bcrypt.hash('root', 12); //$2a$12$5HYdH./KgroJDrw6ZmPx2O.sZQhxsldKHE57s/l8a42QVqXSI/fhS -> for 10 rounds $2a$10$n.UHb.bN.ktM8pCeJaqbKOu8lPck/HjQ/CAFpogitCsh2S//Tz7we
             const hashedPassword = await bcrypt.hash('root', 10); //$2a$10$n.UHb.bN.ktM8pCeJaqbKOu8lPck/HjQ/CAFpogitCsh2S//Tz7we
+            const hashedPasswordUser = await bcrypt.hash('12345', 10);
             await Users.create({
                 user: 'admin',
                 email: 'admin@example.com',
                 pass: hashedPassword,
+                role: 'admin'
+            });
+
+            await Users.create({
+                user: 'user',
+                email: 'user@example.com',
+                pass: hashedPasswordUser,
                 role: 'admin'
             });
 
@@ -99,7 +123,9 @@ async function seedDefaultCategories() {
                 await Categories.create(cat);
                 console.log(`✅ Categoría "${cat.title}" creada.`);
             } else {
-                console.log(`ℹ️ Categoría "${cat.title}" ya existe.`);
+                // Un comment to update the category if needed
+                //await Categories.update(cat, { where: { url: cat.url } });
+                console.log(`ℹ️ Categoría "${cat.title}" setted.`);
             }
         } catch (error) {
             console.error(`❌ Error al crear categoría "${cat.title}":`, error.message);
